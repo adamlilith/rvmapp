@@ -33,9 +33,17 @@ function(d,pred,x_vars=NULL,sim_n=1000,predict_delta=TRUE,give_p=TRUE,lifn_F1=li
     
     discr <- (discr + 1)/2 # code S>d as 1, S<d as 0
     discr[discr==0.5] <- NA
-
+    
+    ## Keep input parameters in the returned object (for plotting, prediction, etc.)
+    return_val$d <- d
+    return_val$pred <- pred
+    return_val$x_vars <- x_vars
+    return_val$F1fn <- F1fn
+    return_val$F2fn <- F2fn
 
     ## P-values ##
+    return_val$p_val_slope <- NULL
+    return_val$p_val_intercept <- NULL
     if(give_p)
     {
         ## Slope of F1
@@ -55,6 +63,10 @@ function(d,pred,x_vars=NULL,sim_n=1000,predict_delta=TRUE,give_p=TRUE,lifn_F1=li
     }
 
     ## Delta prediction ##
+    return_val$delta <- NULL
+    return_val$f1_pars <- NULL
+    return_val$f2_pars <- NULL
+
     if(predict_delta)
     {
         ## FIT F1 ##
@@ -85,8 +97,9 @@ function(d,pred,x_vars=NULL,sim_n=1000,predict_delta=TRUE,give_p=TRUE,lifn_F1=li
         return_val$delta=delta
         return_val$f1_pars=f1_pars
         return_val$f2_pars=f2_pars
-        class(return_val) <- "vmapp"
     }
+
+    class(return_val) <- "vmapp"
     return(return_val)
 }
 
