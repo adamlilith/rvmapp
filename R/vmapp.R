@@ -85,7 +85,16 @@ function(d,pred,x_vars=NULL,sim_n=1000,predict_delta=TRUE,give_p=TRUE,lifn_F1=li
         return_val$delta=delta
         return_val$f1_pars=f1_pars
         return_val$f2_pars=f2_pars
-        return_val
+        class(return_val) <- "vmapp"
     }
     return(return_val)
 }
+
+
+plot.vmapp<-function(x,...)
+{
+    plot(x$delta[1,])
+    for(i in 2:nrow(x$delta))
+        points(x$delta[i,])
+}
+

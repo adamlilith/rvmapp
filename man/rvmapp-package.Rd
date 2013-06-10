@@ -6,7 +6,7 @@
 Validation Metric Applied to Probabilistic Predictions
 }
 \description{
-The Validation Metric Applied to Probabilistic Predictions (VMAPP) estimates the magnitude of differences between binary probabilistic model predictions and reality. It determines if and where in the predictive range a model fails. 
+The Validation Metric Applied to Probabilistic Predictions (VMAPP) estimates the magnitude of differences between binary probabilistic model predictions and reality. VMAPP compares simulated outcomes from model predictions with the observed outcomes from a series of data not used to construct the model (ie. validation data) and determines if and where in the predictive range a model fails. 
 }
 \details{
 \tabular{ll}{
