@@ -1,5 +1,5 @@
 vmapp <-
-function(d,pred,x_vars=NULL,sim_n=1000,predict_delta=TRUE,give_p=TRUE,lifn_F1=li_F1,lifn_F2=li_F2,pars_f1=c(1,1,0.2,1,1,0.2),pars_f2=c(1,1,1,1,0),F1fn=F1,F2fn=F2)
+function(d,pred,x_vars=NULL,sim_n=1000,predict_delta=TRUE,give_p=TRUE,lifn_F1=li_F1,lifn_F2=li_F2,pars_f1=c(2.0,5.0,0.0,0.5,0.5,0.1),pars_f2=c(1,1,1,1,0),F1fn=F1,F2fn=F2)
 {
     if(is.null(dim(pred))) ##MLE, so expand into a big matrix
     {
@@ -26,7 +26,6 @@ function(d,pred,x_vars=NULL,sim_n=1000,predict_delta=TRUE,give_p=TRUE,lifn_F1=li
 
     ## Simulate outcomes from the prediction vectors
     S<-apply(pred,2,bs)
- 
 
     discr <- t(apply(S,1,function(x){x-d}))
     discr_abs <- abs(discr)
@@ -40,6 +39,9 @@ function(d,pred,x_vars=NULL,sim_n=1000,predict_delta=TRUE,give_p=TRUE,lifn_F1=li
     return_val$x_vars <- x_vars
     return_val$F1fn <- F1fn
     return_val$F2fn <- F2fn
+    return_val$S <- S
+    return_val$discrepencies <- discr_abs
+    return_val$direction_discrepencies <- discr
 
     ## P-values ##
     return_val$p_val_slope <- NULL
