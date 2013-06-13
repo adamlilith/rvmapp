@@ -1,5 +1,16 @@
 vmapp <-
-function(d,pred,x_vars=NULL,sim_n=1000,predict_delta=TRUE,give_p=TRUE,lifn_F1=li_F1,lifn_F2=li_F2,pars_f1=c(0.1,1,0.2,0.1,1,0.2),pars_f2=c(1,1,1,1,0),F1fn=F1,F2fn=F2)
+function(d,
+    pred,
+    x_vars=NULL,
+    sim_n=1000,
+    predict_delta=TRUE,
+    give_p=TRUE,
+    lifn_F1=li_F1,
+    lifn_F2=li_F2,
+    pars_f1=c(0.1,1,0.2437,0.1,1,0.2437),
+    pars_f2=c(1,1,1,1,0),
+    F1fn=F1,
+    F2fn=F2)
 {
     if(is.null(dim(pred))) ##MLE, so expand into a big matrix
     {
@@ -71,14 +82,6 @@ function(d,pred,x_vars=NULL,sim_n=1000,predict_delta=TRUE,give_p=TRUE,lifn_F1=li
 
     if(predict_delta)
     {
-        ## FIT F1 ##
-        m1 <- cbind(x_,discr)        
-        n_par_f1 <- length(pars_f1)    
-        f1_pars <- t(apply(m1,1,function(x){ 
-            fit_f1<- optim(par=pars_f1, fn=lifn_F1,x=x[1:n],y=x[(n+1):(2*n)],control = list(maxit = 500,reltol=1e-3))
-            return(fit_f1$par)
-        }))
-
         ## FIT F2 ##
         m2 <- cbind(x_,discr_abs) ## Paste prediction and discrepencies together for fast apply of the fitting.
         n_par_f2 <- length(pars_f2)
@@ -87,6 +90,19 @@ function(d,pred,x_vars=NULL,sim_n=1000,predict_delta=TRUE,give_p=TRUE,lifn_F1=li
             return(fit_f2$par)
         }))
 
+        ## Get F2 preds for use in restricting F1 ##
+        mp <- cbind(pred,f2_pars)
+        f2_preds<-t(apply(mp,1,function(x){
+            F2fn(x[1:n],x[(n+1):n_par_f2])
+        }))
+
+        ## FIT F1 ##
+        m1 <- cbind(x_,discr,f2_preds,pred)        
+        n_par_f1 <- length(pars_f1)    
+        f1_pars <- t(apply(m1,1,function(x){ 
+            fit_f1<- optim(par=pars_f1, fn=lifn_F1,x=x[1:n],y=x[(n+1):(2*n)],f2_preds=x[(2*n+1):(3*n)],pred=x[(3*n+1):(4*n)],control = list(maxit = 500,reltol=1e-3))
+            return(fit_f1$par)
+        }))        
         
         ## Delta ##
         f1f2_pars<-cbind(x_,f1_pars,f2_pars)
@@ -99,6 +115,7 @@ function(d,pred,x_vars=NULL,sim_n=1000,predict_delta=TRUE,give_p=TRUE,lifn_F1=li
         return_val$delta=delta
         return_val$f1_pars=f1_pars
         return_val$f2_pars=f2_pars
+        return_val$f2_preds=f2_preds
     }
 
     class(return_val) <- "vmapp"
