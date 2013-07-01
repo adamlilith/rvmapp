@@ -14,8 +14,13 @@ function(d,
 {
     if(is.null(dim(pred))) ##MLE, so expand into a big matrix
     {
-      pred <- array(rep(pred,sim_n),dim=c(length(pred),sim_n))
-      pred <- t(pred)
+        pred <- array(rep(pred,sim_n),dim=c(length(pred),sim_n))
+        pred <- t(pred)
+    }else{
+        ## If a bootstrapped/bayesian prediction matrix
+        ## Sample with replacement sim_n times.
+        reps_index <- sample(1:dim(pred)[1],sim_n,replace=TRUE)
+        pred <- pred[reps_index,]
     }
     return_val=list()
     use_x <- !is.null(x_vars)
