@@ -91,7 +91,10 @@ function(d,
         m2 <- cbind(x_,discr_abs) ## Paste prediction and discrepencies together for fast apply of the fitting.
         n_par_f2 <- length(pars_f2)
         f2_pars<-t(apply(m2,1,function(x){
-            fit_f2 <- optim(par=pars_f2, fn=lifn_F2,x=x[1:n],y=x[(n+1):(2*n)], control = list(maxit = 500,reltol=1e-3))
+            fit_f2 <- optim(par=pars_f2, 
+                fn=lifn_F2,x=x[1:n],
+                y=x[(n+1):(2*n)], 
+                control = list(maxit = 500,reltol=1e-6))
             return(fit_f2$par)
         }))
 
@@ -105,7 +108,12 @@ function(d,
         m1 <- cbind(x_,discr,f2_preds,pred)        
         n_par_f1 <- length(pars_f1)    
         f1_pars <- t(apply(m1,1,function(x){ 
-            fit_f1<- optim(par=pars_f1, fn=lifn_F1,x=x[1:n],y=x[(n+1):(2*n)],f2_preds=x[(2*n+1):(3*n)],pred=x[(3*n+1):(4*n)],control = list(maxit = 500,reltol=1e-3))
+            fit_f1<- optim(par=pars_f1, 
+                fn=lifn_F1,x=x[1:n],
+                y=x[(n+1):(2*n)],
+                f2_preds=x[(2*n+1):(3*n)],
+                pred=x[(3*n+1):(4*n)],
+                control = list(maxit = 500,reltol=1e-3))
             return(fit_f1$par)
         }))        
         
@@ -128,12 +136,59 @@ function(d,
 }
 
 
-plot.vmapp<-function(x,...)
+plot.vmapp<-function(obj,...)
 {
-    plot(x$delta[1,])
-    for(i in 2:nrow(x$delta))
-        points(x$delta[i,])
+    deltafn <- function(xx,f1,f2,f1pars,f2pars) {
+        2 * (f1(xx,f1pars)-0.5) * f2(xx,f2pars)
+    }
+
+    if(F) {
+        curve(deltafn(x,f1=obj$F1fn,
+                f2=obj$F2fn,
+                f1pars=obj$f1_pars[1,],
+                f2pars=obj$f2_pars[1,]),
+            ylim=c(-0.5,0.5),
+            col=rgb(1,0,1,0.1))
+        for(i in 1:length(obj$f1_pars[,1]))
+        {
+            curve(deltafn(x,f1=obj$F1fn,
+                    f2=obj$F2fn,
+                    f1pars=obj$f1_pars[i,],
+                    f2pars=obj$f2_pars[i,]),
+                add=TRUE,
+                col=rgb(1,0,1,0.1))
+        }
+    }
+
+    pars <- obj$f1_pars
+    n_levels <- 30
+    range <- range(obj$pred)
+    x <- seq(range[1],range[2],length.out=n_levels)
+    mu_y <- numeric(n_levels)
+    upper_y <- numeric(n_levels)
+    lower_y <- numeric(n_levels)
+    y_dist <- array(dim=c(nrow(pars),n_levels))
+
+    for(i in 1:nrow(pars))
+        y_dist[i,] <- deltafn(x,f1=obj$F1fn,
+                f2=obj$F2fn,
+                f1pars=obj$f1_pars[i,],
+                f2pars=obj$f2_pars[i,])
+
+    mu_y <- apply(y_dist,2,mean)
+    upper_y <- apply(y_dist,2,quantile,probs=0.975) 
+    lower_y <- apply(y_dist,2,quantile,probs=0.025)
+
+    plot(mu_y,
+        xlab=expression(hat(p)),
+        ylab=expression(delta),
+        lwd=2,
+        ylim=c(-0.5,0.5))
+    lines(upper_y,lty=2,lwd=2)
+    lines(lower_y,lty=2,lwd=2)
+    
 }
+
 print.vmapp <- function(x)
 {
     cat('###########################################################\n')
