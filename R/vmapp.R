@@ -136,30 +136,13 @@ function(d,
 }
 
 
+deltafn <- function(xx,f1,f2,f1pars,f2pars) 
+{
+    2 * (f1(xx,f1pars)-0.5) * f2(xx,f2pars)
+}
+
 plot.vmapp<-function(obj,...)
 {
-    deltafn <- function(xx,f1,f2,f1pars,f2pars) {
-        2 * (f1(xx,f1pars)-0.5) * f2(xx,f2pars)
-    }
-
-    if(F) {
-        curve(deltafn(x,f1=obj$F1fn,
-                f2=obj$F2fn,
-                f1pars=obj$f1_pars[1,],
-                f2pars=obj$f2_pars[1,]),
-            ylim=c(-0.5,0.5),
-            col=rgb(1,0,1,0.1))
-        for(i in 1:length(obj$f1_pars[,1]))
-        {
-            curve(deltafn(x,f1=obj$F1fn,
-                    f2=obj$F2fn,
-                    f1pars=obj$f1_pars[i,],
-                    f2pars=obj$f2_pars[i,]),
-                add=TRUE,
-                col=rgb(1,0,1,0.1))
-        }
-    }
-
     pars <- obj$f1_pars
     n_levels <- 30
     range <- range(obj$pred)
@@ -179,14 +162,22 @@ plot.vmapp<-function(obj,...)
     upper_y <- apply(y_dist,2,quantile,probs=0.975) 
     lower_y <- apply(y_dist,2,quantile,probs=0.025)
 
-    plot(mu_y,
+    plot(x,mu_y,
         xlab=expression(hat(p)),
         ylab=expression(delta),
+        type='l',
         lwd=2,
+        col='red',
         ylim=c(-0.5,0.5))
-    lines(upper_y,lty=2,lwd=2)
-    lines(lower_y,lty=2,lwd=2)
-    
+    lines(x,upper_y,lty=2,lwd=2)
+    lines(x,lower_y,lty=2,lwd=2)
+    abline(h=0,lty=3,col='grey')
+
+    legend('topleft',
+        legend=c('Mean delta','95% CI'),
+        lty=1:2,
+        lwd=2,
+        col=c('red','black'))
 }
 
 print.vmapp <- function(x)
@@ -197,7 +188,7 @@ print.vmapp <- function(x)
     cat('  Test for overall bias:\n')
     cat('    Average difference between predicted\n')
     cat('    and actual probabilities: ')
-    cat(signif(mean(x$delta),3))
+    cat(signif(mean(x$pred)-mean(x$d),3) ) 
     cat('.\n')
     cat('    (p < 0.05: Under-estimation,\n')
     cat('     p > 0.95: Over-estimation)\n')   
@@ -208,7 +199,33 @@ print.vmapp <- function(x)
     cat('    (p < 0.05: Over/Under,\n')
     cat('     p > 0.95: Under/Over)\n')
     cat('    P-value: ')
-    cat(signif(x$p_val_intercept,3))
+    cat(signif(x$p_val_slope,3))
     cat('\n')
     cat('\n###########################################################\n')
 }
+
+predict.vmapp <- function(obj,x,CI=0.95,rawdist=FALSE)
+{
+    ## WARNING: Should only be used for x in range p_hat ##
+    pars <- obj$f1_pars
+    y_dist <- numeric(nrow(pars))
+    for(i in 1:nrow(pars))
+        y_dist[i] <- deltafn(x,f1=obj$F1fn,
+                f2=obj$F2fn,
+                f1pars=obj$f1_pars[i,],
+                f2pars=obj$f2_pars[i,])
+
+    if(!rawdist) {
+        lower_prob <- (1 - CI) / 2
+        upper_prob <- 1 - lower_prob
+        cat(paste('Using a',CI,'% CI\n'))
+        lowerCI <- quantile(y_dist,probs=lower_prob)
+        upperCI <- quantile(y_dist,probs=upper_prob)
+        result <- data.frame(mean=mean(y_dist),lowerCI=lowerCI,upperCI=upperCI)
+        rownames(result) <- NULL
+        return(result)
+    } else {
+        return(y_dist)
+    }
+}
+
