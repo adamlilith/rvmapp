@@ -26,7 +26,7 @@ calling \code{plot.vmapp(x)} regardless of the
 class of the object.
 }
 \references{
-    Chivers, C., Leung, B. Yann, N. (2013) Probabilistic predictions in ecology and their validation. Ecology Letters.
+    Chivers, C., Leung, B. Yann, N. (2013) Probabilistic predictions in ecology and their validation. In prep.
 }
 \author{
 Corey Chivers <corey.chivers@mail.mcgill.ca>
