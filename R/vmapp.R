@@ -206,9 +206,9 @@ print.vmapp <- function(x)
 
 predict.vmapp <- function(obj,x,CI=0.95,rawdist=FALSE,rawprob=FALSE)
 {
-    ## If rawprob == TRUE, x will be interpreted as  ##
-    ## a predicted probability for which to predict delta##
-    ## WARNING: Should only be used for x in range p_hat ##
+    ## If rawprob == FALSE, x will be interpreted as  ##
+    ## the index of a case in the validation set for  ##
+    ## which to predict delta.                        ##
     pars <- obj$f1_pars
     y_dist <- numeric(nrow(pars))
     if(!rawprob)
@@ -219,6 +219,9 @@ predict.vmapp <- function(obj,x,CI=0.95,rawdist=FALSE,rawprob=FALSE)
                     f1pars=obj$f1_pars[i,],
                     f2pars=obj$f2_pars[i,])
     } else {
+    ## If rawprob == TRUE, x will be interpreted as  ##
+    ## a predicted probability for which to predict delta##
+    ## WARNING: Should only be used for x in range p_hat ##    
         for(i in 1:nrow(pars))
             y_dist[i] <- deltafn(x,f1=obj$F1fn,
                     f2=obj$F2fn,
