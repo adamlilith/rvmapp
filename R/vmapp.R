@@ -204,17 +204,29 @@ print.vmapp <- function(x)
     cat('\n###########################################################\n')
 }
 
-predict.vmapp <- function(obj,x,CI=0.95,rawdist=FALSE)
+predict.vmapp <- function(obj,x,CI=0.95,rawdist=FALSE,rawprob=FALSE)
 {
+    ## If rawprob == TRUE, x will be interpreted as  ##
+    ## a predicted probability for which to predict delta##
     ## WARNING: Should only be used for x in range p_hat ##
     pars <- obj$f1_pars
     y_dist <- numeric(nrow(pars))
-    for(i in 1:nrow(pars))
-        y_dist[i] <- deltafn(x,f1=obj$F1fn,
-                f2=obj$F2fn,
-                f1pars=obj$f1_pars[i,],
-                f2pars=obj$f2_pars[i,])
-
+    if(!rawprob)
+    {
+        for(i in 1:nrow(pars))
+            y_dist[i] <- deltafn(obj$pred[i,x],f1=obj$F1fn,
+                    f2=obj$F2fn,
+                    f1pars=obj$f1_pars[i,],
+                    f2pars=obj$f2_pars[i,])
+    } else {
+        for(i in 1:nrow(pars))
+            y_dist[i] <- deltafn(x,f1=obj$F1fn,
+                    f2=obj$F2fn,
+                    f1pars=obj$f1_pars[i,],
+                    f2pars=obj$f2_pars[i,])
+    }
+    ## If rawdist == TRUE, the samples from the predicted delta
+    ## will be returned instead of mean and CIs.
     if(!rawdist) {
         lower_prob <- (1 - CI) / 2
         upper_prob <- 1 - lower_prob
