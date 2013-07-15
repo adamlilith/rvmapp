@@ -141,36 +141,36 @@ deltafn <- function(xx,f1,f2,f1pars,f2pars)
     2 * (f1(xx,f1pars)-0.5) * f2(xx,f2pars)
 }
 
-plot.vmapp<-function(obj,...)
+plot.vmapp<-function(x,...)
 {
-    pars <- obj$f1_pars
+    pars <- x$f1_pars
     n_levels <- 30
-    range <- range(obj$pred)
-    x <- seq(range[1],range[2],length.out=n_levels)
+    range <- range(x$pred)
+    xx <- seq(range[1],range[2],length.out=n_levels)
     mu_y <- numeric(n_levels)
     upper_y <- numeric(n_levels)
     lower_y <- numeric(n_levels)
     y_dist <- array(dim=c(nrow(pars),n_levels))
 
     for(i in 1:nrow(pars))
-        y_dist[i,] <- deltafn(x,f1=obj$F1fn,
-                f2=obj$F2fn,
-                f1pars=obj$f1_pars[i,],
-                f2pars=obj$f2_pars[i,])
+        y_dist[i,] <- deltafn(xx,f1=x$F1fn,
+                f2=x$F2fn,
+                f1pars=x$f1_pars[i,],
+                f2pars=x$f2_pars[i,])
 
     mu_y <- apply(y_dist,2,mean)
     upper_y <- apply(y_dist,2,quantile,probs=0.975) 
     lower_y <- apply(y_dist,2,quantile,probs=0.025)
 
-    plot(x,mu_y,
+    plot(xx,mu_y,
         xlab=expression(hat(p)),
         ylab=expression(delta),
         type='l',
         lwd=2,
         col='red',
         ylim=c(-0.5,0.5))
-    lines(x,upper_y,lty=2,lwd=2)
-    lines(x,lower_y,lty=2,lwd=2)
+    lines(xx,upper_y,lty=2,lwd=2)
+    lines(xx,lower_y,lty=2,lwd=2)
     abline(h=0,lty=3,col='grey')
 
     legend('topleft',
@@ -180,7 +180,7 @@ plot.vmapp<-function(obj,...)
         col=c('red','black'))
 }
 
-print.vmapp <- function(x)
+print.vmapp <- function(x,...)
 {
     cat('###########################################################\n')
     cat('Validation Metric Applied to Probabilistic Predictions\n\n')
@@ -204,29 +204,29 @@ print.vmapp <- function(x)
     cat('\n###########################################################\n')
 }
 
-predict.vmapp <- function(obj,x,CI=0.95,rawdist=FALSE,rawprob=FALSE)
+predict.vmapp <- function(object,x,CI=0.95,rawdist=FALSE,rawprob=FALSE,...)
 {
     ## If rawprob == FALSE, x will be interpreted as  ##
     ## the index of a case in the validation set for  ##
     ## which to predict delta.                        ##
-    pars <- obj$f1_pars
+    pars <- object$f1_pars
     y_dist <- numeric(nrow(pars))
     if(!rawprob)
     {
         for(i in 1:nrow(pars))
-            y_dist[i] <- deltafn(obj$pred[i,x],f1=obj$F1fn,
-                    f2=obj$F2fn,
-                    f1pars=obj$f1_pars[i,],
-                    f2pars=obj$f2_pars[i,])
+            y_dist[i] <- deltafn(object$pred[i,x],f1=object$F1fn,
+                    f2=object$F2fn,
+                    f1pars=object$f1_pars[i,],
+                    f2pars=object$f2_pars[i,])
     } else {
     ## If rawprob == TRUE, x will be interpreted as  ##
     ## a predicted probability for which to predict delta##
     ## WARNING: Should only be used for x in range p_hat ##    
         for(i in 1:nrow(pars))
-            y_dist[i] <- deltafn(x,f1=obj$F1fn,
-                    f2=obj$F2fn,
-                    f1pars=obj$f1_pars[i,],
-                    f2pars=obj$f2_pars[i,])
+            y_dist[i] <- deltafn(x,f1=object$F1fn,
+                    f2=object$F2fn,
+                    f1pars=object$f1_pars[i,],
+                    f2pars=object$f2_pars[i,])
     }
     ## If rawdist == TRUE, the samples from the predicted delta
     ## will be returned instead of mean and CIs.
