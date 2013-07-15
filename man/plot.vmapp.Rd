@@ -31,4 +31,6 @@ class of the object.
 \author{
 Corey Chivers <corey.chivers@mail.mcgill.ca>
 }
-
+\seealso{
+\code{\link{print.vmapp}},\code{\link{vmapp}} 
+}

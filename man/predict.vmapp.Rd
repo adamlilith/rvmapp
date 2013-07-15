@@ -69,43 +69,19 @@ Corey Chivers <corey.chivers@mail.mcgill.ca>
 \code{\link{plot.vmapp}},\code{\link{vmapp}},\code{\link{print.vmapp}}
 }
 \examples{
-##---- Should be DIRECTLY executable !! ----
-##-- ==>  Define data, use random,
-##--	or do  help(data=index)  for the standard data sets.
+    ## Generate outcomes
+    p<-runif(100)
+    outcomes<-bs(p)
 
-## The function is currently defined as
-function (object, x, CI = 0.95, rawdist = FALSE, rawprob = FALSE, 
-    ...) 
-{
-    pars <- object$f1_pars
-    y_dist <- numeric(nrow(pars))
-    if (!rawprob) {
-        for (i in 1:nrow(pars)) y_dist[i] <- .deltafn(object$pred[i, 
-            x], f1 = object$F1fn, f2 = object$F2fn, f1pars = object$f1_pars[i, 
-            ], f2pars = object$f2_pars[i, ])
-    }
-    else {
-        for (i in 1:nrow(pars)) y_dist[i] <- .deltafn(x, f1 = object$F1fn, 
-            f2 = object$F2fn, f1pars = object$f1_pars[i, ], f2pars = object$f2_pars[i, 
-                ])
-    }
-    if (!rawdist) {
-        lower_prob <- (1 - CI)/2
-        upper_prob <- 1 - lower_prob
-        cat(paste("Using a", CI, "\% CI\n"))
-        lowerCI <- quantile(y_dist, probs = lower_prob)
-        upperCI <- quantile(y_dist, probs = upper_prob)
-        result <- data.frame(mean = mean(y_dist), lowerCI = lowerCI, 
-            upperCI = upperCI)
-        rownames(result) <- NULL
-        return(result)
-    }
-    else {
-        return(y_dist)
-    }
-  }
+    ## We have a perfect model 
+    p_hat<-p
+
+    ## Run vmapp
+    #VMAPP <- vmapp(d=outcomes, pred=p_hat)
+    #predict(VMAPP,1)   #Predicted delta for the first datapoint.
+    #predict(VMAPP,0.2,rawprob=TRUE) #Predicted delta p_hat=0.2
+    #predict(VMAPP,1,rawdist=TRUE)   #Predicted delta distribution. This returns the
+                                     #each datapoint in the monte carlo simulation of delta.
+    
 }
-% Add one or more standard keywords, see file 'KEYWORDS' in the
-% R documentation directory.
-\keyword{ ~kwd1 }
-\keyword{ ~kwd2 }% __ONLY ONE__ keyword per line
+

@@ -36,7 +36,7 @@ This functional form is the default passed to \code{vmapp}. It is defined as:
 
 \examples{
     ## Default starting parameters for vmapp fitting.
-    pars <- c(1,1,0.2,1,1,0.2)
+    pars <- c(0.1, 1, 0.2437, 0.1, 1, 0.2437)
     
     ## Plot F1 over the range 0-1
     curve(F1(x,pars=pars))
