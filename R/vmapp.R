@@ -226,7 +226,7 @@ predict.vmapp <- function(object,x,CI=0.95,rawdist=FALSE,rawprob=FALSE,...)
             y_dist[i] <- .deltafn(x,f1=object$F1fn,
                     f2=object$F2fn,
                     f1pars=object$f1_pars[i,],
-                    f2pars=obj$f2_pars[i,])
+                    f2pars=object$f2_pars[i,])
     }
     ## If rawdist == TRUE, the samples from the predicted delta
     ## will be returned instead of mean and CIs.
