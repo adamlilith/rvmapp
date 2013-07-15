@@ -9,7 +9,7 @@ Provides predicted deviations (\eqn{\delta}) between actuall probabilities and
 those predicted by the model. 
 }
 \usage{
-predict.vmapp(object, x, CI = 0.95, rawdist = FALSE, rawprob = FALSE, ...)
+\method{predict}{vmapp}(object, x, CI = 0.95, rawdist = FALSE, rawprob = FALSE, ...)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -54,10 +54,10 @@ is set to \code{TRUE}, then the returned value will be a vector of samples from
 the predictive distribution of \eqn{\delta}.
 }
 \references{
-%% ~put references to the literature/web site here ~
+    Chivers, C., Leung, B. Yan, N. (2013) Probabilistic predictions in ecology and their validation. In prep.
 }
 \author{
-%%  ~~who you are~~
+Corey Chivers <corey.chivers@mail.mcgill.ca>
 }
 \note{
 %%  ~~further notes~~
@@ -66,7 +66,7 @@ the predictive distribution of \eqn{\delta}.
 %% ~Make other sections like Warning with \section{Warning }{....} ~
 
 \seealso{
-%% ~~objects to See Also as \code{\link{help}}, ~~~
+\code{\link{plot.vmapp}},\code{\link{vmapp}},\code{\link{print.vmapp}}
 }
 \examples{
 ##---- Should be DIRECTLY executable !! ----

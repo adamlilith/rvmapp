@@ -8,7 +8,7 @@ Print Method for Class 'vmapp'
 Prints a summary output of a vmapp object.
 }
 \usage{
-print.vmapp(x, ...)
+\method{print}{vmapp}(x, ...)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
