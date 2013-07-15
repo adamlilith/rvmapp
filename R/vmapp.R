@@ -136,7 +136,7 @@ function(d,
 }
 
 
-deltafn <- function(xx,f1,f2,f1pars,f2pars) 
+.deltafn <- function(xx,f1,f2,f1pars,f2pars) 
 {
     2 * (f1(xx,f1pars)-0.5) * f2(xx,f2pars)
 }
@@ -153,7 +153,7 @@ plot.vmapp<-function(x,...)
     y_dist <- array(dim=c(nrow(pars),n_levels))
 
     for(i in 1:nrow(pars))
-        y_dist[i,] <- deltafn(xx,f1=x$F1fn,
+        y_dist[i,] <- .deltafn(xx,f1=x$F1fn,
                 f2=x$F2fn,
                 f1pars=x$f1_pars[i,],
                 f2pars=x$f2_pars[i,])
@@ -214,7 +214,7 @@ predict.vmapp <- function(object,x,CI=0.95,rawdist=FALSE,rawprob=FALSE,...)
     if(!rawprob)
     {
         for(i in 1:nrow(pars))
-            y_dist[i] <- deltafn(object$pred[i,x],f1=object$F1fn,
+            y_dist[i] <- .deltafn(object$pred[i,x],f1=object$F1fn,
                     f2=object$F2fn,
                     f1pars=object$f1_pars[i,],
                     f2pars=object$f2_pars[i,])
@@ -223,10 +223,10 @@ predict.vmapp <- function(object,x,CI=0.95,rawdist=FALSE,rawprob=FALSE,...)
     ## a predicted probability for which to predict delta##
     ## WARNING: Should only be used for x in range p_hat ##    
         for(i in 1:nrow(pars))
-            y_dist[i] <- deltafn(x,f1=object$F1fn,
+            y_dist[i] <- .deltafn(x,f1=object$F1fn,
                     f2=object$F2fn,
                     f1pars=object$f1_pars[i,],
-                    f2pars=object$f2_pars[i,])
+                    f2pars=obj$f2_pars[i,])
     }
     ## If rawdist == TRUE, the samples from the predicted delta
     ## will be returned instead of mean and CIs.
