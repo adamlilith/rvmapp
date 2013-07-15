@@ -74,7 +74,7 @@ vmapp(d, pred, x_vars = NULL, sim_n = 1000, predict_delta = TRUE,
 
 }
 \references{
-    Chivers, C., Leung, B. Yann, N. (2013) Probabilistic predictions in ecology and their validation. Ecology Letters.
+    Chivers, C., Leung, B. Yan, N. (2013) Probabilistic predictions in ecology and their validation. In prep.
 }
 \author{
 Corey Chivers <corey.chivers@mail.mcgill.ca>

@@ -22,5 +22,5 @@ License: \tab GPL (>=3)\cr
 Corey Chivers <corey.chivers@mail.mcgill.ca> & Brian Leung.
 }
 \references{
-    Chivers, C., Leung, B. Yann, N. (2013) Probabilistic predictions in ecology and their validation. Ecology Letters.
+    Chivers, C., Leung, B. Yan, N. (2013) Probabilistic predictions in ecology and their validation. In prep.
 }
