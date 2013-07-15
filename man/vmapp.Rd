@@ -90,4 +90,6 @@ Corey Chivers <corey.chivers@mail.mcgill.ca>
 
     ## Run vmapp
     #VMAPP <- vmapp(d=outcomes, pred=p_hat)
+    #VMAPP
+    #plot(VMAPP)
 }
