@@ -2,10 +2,11 @@
 \alias{predict.vmapp}
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{
-%%  ~~function to do ... ~~
+Predict Method for Class 'vmapp'
 }
 \description{
-%%  ~~ A concise (1-5 lines) description of what the function does. ~~
+Provides predicted deviations (\eqn{\delta}) between actuall probabilities and 
+those predicted by the model. 
 }
 \usage{
 predict.vmapp(object, x, CI = 0.95, rawdist = FALSE, rawprob = FALSE, ...)
@@ -13,33 +14,44 @@ predict.vmapp(object, x, CI = 0.95, rawdist = FALSE, rawprob = FALSE, ...)
 %- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{object}{
-%%     ~~Describe \code{object} here~~
+An object of type \code{"vmapp"}.
 }
   \item{x}{
-%%     ~~Describe \code{x} here~~
+If \code{rawprob} is set to \code{FALSE}, then \code{x} will be interpreted as
+the index of a case in the validation set for which to predict \eqn{\delta}. 
+Alternatively, if \code{rawprob} is set to \code{TRUE}, x will be interpreted 
+as a predicted probability for which to predict \eqn{\delta}.
+WARNING: The latter should only be used for values of \code{x} in range of
+predicted probabilities from the model.
 }
   \item{CI}{
-%%     ~~Describe \code{CI} here~~
+Width of the confidence interval to return. Defaults to 0.95, meaning a 95\% 
+confidence interval.
 }
   \item{rawdist}{
-%%     ~~Describe \code{rawdist} here~~
+Boolean: If set to \code{FALSE} (default), a data frame with the mean, and lower,
+and upper confidence boundaries will be returned.
+If set to \code{TRUE}, then instead of a confidence interval, raw data
+points representing the distribution of predicted \eqn{\delta} will be returned. 
+Summary statistics can then be calculated on this vector.
 }
   \item{rawprob}{
-%%     ~~Describe \code{rawprob} here~~
+Boolean: If set to \code{TRUE}, then predictions will be returned for the data
+point at index \code{x}. If set to \code{FALSE}, the predictive distribution of 
+\eqn{\delta} will be returned which corresponds to predicted probability \code{x}.
 }
   \item{\dots}{
-%%     ~~Describe \code{\dots} here~~
+Additional arguments will be ignored. 
 }
 }
 \details{
 %%  ~~ If necessary, more details than the description above ~~
 }
 \value{
-%%  ~Describe the value returned
-%%  If it is a LIST, use
-%%  \item{comp1 }{Description of 'comp1'}
-%%  \item{comp2 }{Description of 'comp2'}
-%% ...
+As outlined in the argument descriptions, the default behaviour is to return 
+the mean, and confidence boundaries of the predicted \eqn{\delta}. If \code{rawdist} 
+is set to \code{TRUE}, then the returned value will be a vector of samples from
+the predictive distribution of \eqn{\delta}.
 }
 \references{
 %% ~put references to the literature/web site here ~
