@@ -2,7 +2,7 @@
 \alias{vmapp}
 
 \title{
-Validation metric applied to probabilistic predictions.
+Validation Metric Applied to Probabilistic Predictions (VMAPP).
 }
 \description{
 Provides an inferential metric of goodness of fit of a binary prediction model using independent validation data. Also provides an estimate of the differences between probabilities predicted by a model and the underlying probabilities generating the observations.
