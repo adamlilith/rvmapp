@@ -10,7 +10,7 @@ This function is used for fitting \eqn{F_1} to simulated realizations of \eqn{S}
 }
 
 \usage{
-li_F1(pars, x, y)
+li_F1(pars, x, y, pred, f2_preds)
 }
 
 \arguments{
@@ -22,6 +22,12 @@ li_F1(pars, x, y)
 }
   \item{y}{
     a vector of y values at which to evaluate the likelihood.
+}
+  \item{pred}{
+    a vector of predicted probabilities from the model. This is \eqn{\hat{p}}.
+}
+  \item{f2_preds}{
+    a vector of predicted probabilities from the current fit of \code{F2}. Along with \code{pred}, this is used to dissallow illegal predictions of \code{F1}.
 }
 }
 
