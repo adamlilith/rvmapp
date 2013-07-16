@@ -61,7 +61,7 @@ function(d,
 
     ## P-values ##
     return_val$p_val_slope <- NULL
-    return_val$p_val_intercept <- NULL
+    return_val$p_val_overall <- NULL
     if(give_p)
     {
         ## Slope of F1
@@ -77,7 +77,7 @@ function(d,
         p_intercept<-mean(mean_discr>=0.5)        
 
         return_val$p_val_slope=p_slope
-        return_val$p_val_intercept=p_intercept
+        return_val$p_val_overall=p_intercept
     }
 
     ## Delta prediction ##
@@ -194,7 +194,7 @@ print.vmapp <- function(x,...)
     cat('    (p < 0.05: Under-estimation,\n')
     cat('     p > 0.95: Over-estimation)\n')   
     cat('    P-value: ')
-    cat(signif(x$p_val_intercept,3))
+    cat(signif(x$p_val_overall,3))
     cat('\n')
     cat('  Test for direction change in bias:\n')
     cat('    (p < 0.05: Over/Under,\n')
