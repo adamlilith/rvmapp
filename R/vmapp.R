@@ -168,7 +168,8 @@ plot.vmapp<-function(x,...)
         type='l',
         lwd=2,
         col='red',
-        ylim=c(-0.5,0.5))
+        ylim=c(-0.5,0.5),
+        ...)
     lines(xx,upper_y,lty=2,lwd=2)
     lines(xx,lower_y,lty=2,lwd=2)
     abline(h=0,lty=3,col='grey')
