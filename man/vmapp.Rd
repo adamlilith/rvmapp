@@ -81,15 +81,71 @@ Corey Chivers <corey.chivers@mail.mcgill.ca>
 }
 
 \examples{
-    ## Generate outcomes
-    p<-runif(100)
-    outcomes<-bs(p)
 
-    ## We have a perfect model 
-    p_hat<-p
+## Simulate data on which to build a model ##
+x <- runif(100,-2,2)        ## Independent vars
+p <- 1/(1+exp(-x))          ## Simple logistic probabilities
+outcomes<-bs(p)             ## Binary outcomes
 
-    ## Run vmapp
-    #VMAPP <- vmapp(d=outcomes, pred=p_hat)
-    #VMAPP
-    #plot(VMAPP)
+par(mfrow=c(2,2))
+plot(x,p,ylim=c(0,1))
+
+
+
+################################################################################
+## First VMAPP for a model with only stochastic uncertainty (MLE of parameters)
+model.fit <- glm(outcomes ~ x, family=binomial(logit)) ## Simple logistic Regression
+
+## Simulate some validation data
+x_val <- runif(100,-2,2)    ## New independent vars
+p_val <- 1/(1+exp(-x_val))  ## Probabilities from the same model as before
+outcomes_val <- bs(p_val)   ## Binary outcomes (validation data)
+
+## Predict the probabilities associated with our validation data 
+p_hat <- predict(model.fit, newdata = data.frame(x=x_val),type="response")
+
+## Plot predictions on top of actual probabilities
+points(x_val,p_hat,col='red')
+legend('topleft',
+    legend=c('Actual Probability','Predicted Probability'),
+    col=c('black','red'),
+    pch=1)
+
+## Run VMAPP ##
+VMAPP <- vmapp(d=outcomes_val, pred=p_hat)
+VMAPP
+
+## Plot VMAPP
+plot(VMAPP,main='VMAPP -- No Parametric Uncertainty')
+
+
+################################################################################
+## Now VMAPP on bootstrapped predictions which encorporate parameter uncertainty
+
+## Set up the same plot as before 
+plot(x,p,ylim=c(0,1))
+legend('topleft',
+    legend=c('Actual Probability','Predicted Probability'),
+    col=c('black','red'),
+    pch=1)
+
+n_boot <- 1000 ## Number of bootstraps
+p_hat <- array(dim=c(n_boot,100)) ## An array to store predictions
+for(i in 1:n_boot)
+{
+    boot_index <- sample(1:100,replace=TRUE) ## Sample original data with replacement
+    x_boot <- x[boot_index]
+    model.fit <- glm(outcomes[boot_index] ~ x_boot, family=binomial(logit))
+    p_hat[i,] <- predict(model.fit, newdata = data.frame(x_boot=x_val),type="response")
+    points(x_val,p_hat[i,],col=rgb(1,0,0,0.1),pch=20) ## Add bootstrapped preds to plot
+}
+points(x,p) ## Redraw actual probabilities on top
+
+## Run VMAPP again, this time with parameter uncertainty included
+VMAPP <- vmapp(d=outcomes_val, pred=p_hat)
+VMAPP
+
+plot(VMAPP)
+
+
 }
