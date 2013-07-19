@@ -100,7 +100,7 @@ function(d,
                 control = list(maxit = 500,reltol=1e-6))
             f2_pars[i,] <<- fit_f2$par
             return("")
-        }))
+        })
 
         ## Get F2 preds for use in restricting F1 ##
         mp <- cbind(pred,f2_pars)
@@ -114,14 +114,14 @@ function(d,
         f1_pars <- array(dim=c(nrow(m1),n_par_f1))   
         tmp <- tapply(1:nrow(m1),1:nrow(m1),function(i){ 
             fit_f1<- optim(par=pars_f1, 
-                fn=lifn_F1,m1=x[i,1:n],
+                fn=lifn_F1,x=m1[i,1:n],
                 y=m1[i,(n+1):(2*n)],
                 f2_preds=m1[i,(2*n+1):(3*n)],
                 pred=m1[i,(3*n+1):(4*n)],
                 control = list(maxit = 500,reltol=1e-3))
             f1_pars[i,] <<- fit_f1$par
             return("")
-        }))        
+        })        
         
         ## Delta ##
         f1f2_pars<-cbind(x_,f1_pars,f2_pars)
