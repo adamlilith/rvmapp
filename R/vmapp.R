@@ -66,11 +66,13 @@ function(d,
     {
         ## Slope of F1
         m1 <- cbind(x_,discr)
-        f1_coeffs<-apply(m1,1,function(x){
-            yy <- x[(n+1):(2*n)]
-            xx <- x[1:n]
+        f1_coeffs<-array(dim=c(nrow(m1),2))
+        tmp<-tapply(1:nrow(m1),1:nrow(m1),function(i){
+            yy <- m1[i,(n+1):(2*n)]
+            xx <- m1[i,1:n]
             fit <- glm(yy ~ xx,family=binomial(logit))
-            return(fit$coefficients)
+            f1_coeffs[i,] <<-fit$coefficients
+            return("")
         })
         p_slope<-mean(f1_coeffs[2,]>=0)
         mean_discr<-apply(discr,1,mean,na.rm=TRUE)
@@ -90,12 +92,14 @@ function(d,
         ## FIT F2 ##
         m2 <- cbind(x_,discr_abs) ## Paste prediction and discrepencies together for fast apply of the fitting.
         n_par_f2 <- length(pars_f2)
-        f2_pars<-t(apply(m2,1,function(x){
+        f2_pars <- array(dim=c(nrow(m2),n_par_f2)) 
+        tmp <- tapply(1:nrow(m2),1:nrow(m2),function(i){
             fit_f2 <- optim(par=pars_f2, 
-                fn=lifn_F2,x=x[1:n],
-                y=x[(n+1):(2*n)], 
+                fn=lifn_F2,x=m2[i,1:n],
+                y=m2[i,(n+1):(2*n)], 
                 control = list(maxit = 500,reltol=1e-6))
-            return(fit_f2$par)
+            f2_pars[i,] <<- fit_f2$par
+            return("")
         }))
 
         ## Get F2 preds for use in restricting F1 ##
@@ -106,15 +110,17 @@ function(d,
 
         ## FIT F1 ##
         m1 <- cbind(x_,discr,f2_preds,pred)        
-        n_par_f1 <- length(pars_f1)    
-        f1_pars <- t(apply(m1,1,function(x){ 
+        n_par_f1 <- length(pars_f1) 
+        f1_pars <- array(dim=c(nrow(m1),n_par_f1))   
+        tmp <- tapply(1:nrow(m1),1:nrow(m1),function(i){ 
             fit_f1<- optim(par=pars_f1, 
-                fn=lifn_F1,x=x[1:n],
-                y=x[(n+1):(2*n)],
-                f2_preds=x[(2*n+1):(3*n)],
-                pred=x[(3*n+1):(4*n)],
+                fn=lifn_F1,m1=x[i,1:n],
+                y=m1[i,(n+1):(2*n)],
+                f2_preds=m1[i,(2*n+1):(3*n)],
+                pred=m1[i,(3*n+1):(4*n)],
                 control = list(maxit = 500,reltol=1e-3))
-            return(fit_f1$par)
+            f1_pars[i,] <<- fit_f1$par
+            return("")
         }))        
         
         ## Delta ##
