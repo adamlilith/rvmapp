@@ -60,8 +60,6 @@ function(d,
     return_val$direction_discrepencies <- discr
 
     ## P-values ##
-    return_val$p_val_slope <- NULL
-    return_val$p_val_overall <- NULL
     if(give_p)
     {
         ## Slope of F1
@@ -81,10 +79,6 @@ function(d,
     }
 
     ## Delta prediction ##
-    return_val$delta <- NULL
-    return_val$f1_pars <- NULL
-    return_val$f2_pars <- NULL
-
     if(predict_delta)
     {
         ## FIT F2 ##
