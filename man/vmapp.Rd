@@ -60,7 +60,7 @@ vmapp(d, pred, x_vars = NULL, sim_n = 1000, predict_delta = TRUE,
     The proportion of simulated outcomes for which deviation direction was possitively related to \eqn{\hat p} (or \code{x_vars},if given). This is a two-tailed test, where p-value \eqn{ \le \alpha/2 } indicates a significant negative relationship. Alternatively, p-value \eqn{ \ge 1 - \alpha/2 } indicates a significant positive relationship.
     }
   \item{p_val_overall }{
-    The proportion of simulated outcomes for which the mean deviation direction greater than zero (zeror indicating no overall bias). This is also a two-tailed test, where p-value \eqn{ \le \alpha/2 } indicates a significant negative bias (\eqn{\hat p < p}). Alternatively, p-value \eqn{ \ge 1 - \alpha/2 } indicates a significant positive (\eqn{\hat p > p}).
+    The proportion of simulated outcomes for which the mean deviation direction greater than zero (zero indicating no overall bias). This is also a two-tailed test, where p-value \eqn{ \le \alpha/2 } indicates a significant negative bias (\eqn{\hat p < p}). Alternatively, p-value \eqn{ \ge 1 - \alpha/2 } indicates a significant positive (\eqn{\hat p > p}).
     }
   \item{delta }{
     A matrix of estimated differences between model predictions and the true underlying probabilities (\eqn{\hat p - p}). This matrix constitutes a distribution of differences at each data point. 
