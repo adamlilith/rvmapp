@@ -74,8 +74,23 @@ function(d,
         mean_discr<-apply(discr,1,mean,na.rm=TRUE)
         p_overall<-mean(mean_discr>=0.5)        
 
-        return_val$p_val_slope=p_slope
-        return_val$p_val_overall=p_overall
+        ## Two tailed test ##
+        if(p_slope > 0.5)
+        {
+            return_val$p_val_slope <- 2 * (1 - p_slope)
+            return_val$alternative_1 <- "Slope greater than 0"
+        } else {
+            return_val$p_val_slope <- 2 * (p_slope)
+            return_val$alternative_1 <- "Slope less than 0"            
+        }
+        if(p_overall > 0.5)
+        {
+            return_val$p_val_overall <- 2 * (1 - p_overall)
+            return_val$alternative_2 <- "Overprediction of overall risk."            
+        } else {
+            return_val$p_val_overall <- 2 * (p_overall)
+            return_val$alternative_2 <- "Underprediction of overall risk"
+        }
     }
 
     ## Delta prediction ##
