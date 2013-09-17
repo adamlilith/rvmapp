@@ -74,10 +74,10 @@ function(d,
         })
         p_slope<-mean(f1_coeffs[2,]>=0)
         mean_discr<-apply(discr,1,mean,na.rm=TRUE)
-        p_intercept<-mean(mean_discr>=0.5)        
+        p_overall<-mean(mean_discr>=0.5)        
 
         return_val$p_val_slope=p_slope
-        return_val$p_val_overall=p_intercept
+        return_val$p_val_overall=p_overall
     }
 
     ## Delta prediction ##
