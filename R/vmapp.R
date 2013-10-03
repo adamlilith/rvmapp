@@ -78,10 +78,10 @@ function(d,
         if(p_slope > 0.5)
         {
             return_val$p_val_slope <- 2 * (1 - p_slope)
-            return_val$alternative_1 <- "Slope greater than 0"
+            return_val$alternative_1 <- "Slope of bias greater than 0."
         } else {
             return_val$p_val_slope <- 2 * (p_slope)
-            return_val$alternative_1 <- "Slope less than 0"            
+            return_val$alternative_1 <- "Slope of bias less than 0."            
         }
         if(p_overall > 0.5)
         {
@@ -184,7 +184,7 @@ plot.vmapp<-function(x,...)
     abline(h=0,lty=3,col='grey')
 
     legend('topleft',
-        legend=c('Mean delta','95% CI'),
+        legend=c(expression(italic(E(hat(delta)))),'95% CI'),
         lty=1:2,
         lwd=2,
         col=c('red','black'))
@@ -192,24 +192,38 @@ plot.vmapp<-function(x,...)
 
 print.vmapp <- function(x,...)
 {
+
+    star2 <- ''
+    if(x$p_val_overall < 0.05)
+        star2 <- ' *'
+    if(x$p_val_overall < 0.01)
+        star2 <- ' **'
+    if(x$p_val_overall < 0.001)
+        star2 <- ' ***'
+
+    star1 <- ''
+    if(x$p_val_slope < 0.05)
+        star1 <- ' *'
+    if(x$p_val_slope < 0.01)
+        star1 <- ' **'
+    if(x$p_val_slope < 0.001)
+        star1 <- ' ***'
+    
     cat('###########################################################\n')
     cat('Validation Metric Applied to Probabilistic Predictions\n\n')
     cat(paste(length(x$d),'validation data points used.\n'))
     cat('  Test for overall bias:\n')
-    cat('    Average difference between predicted\n')
-    cat('    and actual probabilities: ')
-    cat(signif(mean(x$pred)-mean(x$d),3) ) 
-    cat('.\n')
-    cat('    (p < 0.05: Under-estimation,\n')
-    cat('     p > 0.95: Over-estimation)\n')   
-    cat('    P-value: ')
-    cat(signif(x$p_val_overall,3))
-    cat('\n')
+    cat('    Two-tailed test P-value: ')
+    cat(signif(x$p_val_overall,3),star2,'\n')
+    if(x$p_val_overall < 0.05)
+        cat('    ',star2,'Direction of deviation: ',x$alternative_2)
+    cat('\n\n')
+
     cat('  Test for direction change in bias:\n')
-    cat('    (p < 0.05: Over/Under,\n')
-    cat('     p > 0.95: Under/Over)\n')
-    cat('    P-value: ')
-    cat(signif(x$p_val_slope,3))
+    cat('    Two-tailed test P-value: ')
+    cat(signif(x$p_val_slope,3),star1,'\n')
+    if(x$p_val_slope < 0.05)
+        cat('    ',star1,'Direction of deviation: ',x$alternative_1)
     cat('\n')
     cat('\n###########################################################\n')
 }
