@@ -7,7 +7,7 @@ function(d,
     give_p=TRUE,
     lifn_F1=li_F1,
     lifn_F2=li_F2,
-    pars_f1=c(0.1,1,0.2437,0.1,1,0.2437),
+    pars_f1=c(0,1,0.2928932,0,1,0.2928932),
     pars_f2=c(1,1,1,1,0),
     F1fn=F1,
     F2fn=F2)
