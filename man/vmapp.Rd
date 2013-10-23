@@ -81,7 +81,7 @@ Corey Chivers <corey.chivers@mail.mcgill.ca>
 }
 
 \examples{
-
+set.seed(123)
 ## Simulate data on which to build a model ##
 x <- runif(100,-2,2)        ## Independent vars
 p <- 1/(1+exp(-x))          ## Simple logistic probabilities
