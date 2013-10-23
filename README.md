@@ -12,7 +12,7 @@ License: GPL (>=3)
 
 ### Install ###
 
-rvmapp is still under heavy development. You can install it from `github` using the `devtools` package. 
+`rvmapp` is under development. You can install it from `github` using the `devtools` package. 
 
 First, install the devtools package from cran using the usual command:
 
