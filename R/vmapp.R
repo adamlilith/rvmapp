@@ -7,8 +7,8 @@ function(d,
     give_p=TRUE,
     lifn_F1=li_F1,
     lifn_F2=li_F2,
-    pars_f1=c(0,1,0.2928932,0,1,0.2928932),
-    pars_f2=c(1,1,1,1,0),
+    pars_f1=c(1,1,1,1,0),
+    pars_f2=c(0,1,0.2928932,0,1,0.2928932),
     F1fn=F1,
     F2fn=F2)
 {
@@ -96,34 +96,34 @@ function(d,
     ## Delta prediction ##
     if(predict_delta)
     {
-        ## FIT F2 ##
-        m2 <- cbind(x_,discr_abs) ## Paste prediction and discrepencies together for fast apply of the fitting.
-        n_par_f2 <- length(pars_f2)
-        f2_pars<-t(apply(m2,1,function(x){
-            fit_f2 <- optim(par=pars_f2, 
-                fn=lifn_F2,x=x[1:n],
+        ## FIT F1 ##
+        m1 <- cbind(x_,discr_abs) ## Paste prediction and discrepencies together for fast apply of the fitting.
+        n_par_f1 <- length(pars_f1)
+        f1_pars<-t(apply(m1,1,function(x){
+            fit_f1 <- optim(par=pars_f1, 
+                fn=lifn_F1,x=x[1:n],
                 y=x[(n+1):(2*n)], 
                 control = list(maxit = 500,reltol=1e-6))
-            return(fit_f2$par)
+            return(fit_f1$par)
         }))
 
-        ## Get F2 preds for use in restricting F1 ##
-        mp <- cbind(pred,f2_pars)
-        f2_preds<-t(apply(mp,1,function(x){
-            F2fn(x[1:n],x[(n+1):n_par_f2])
+        ## Get F1 preds for use in restricting F2 ##
+        mp <- cbind(pred,f1_pars)
+        f1_preds<-t(apply(mp,1,function(x){
+            F1fn(x[1:n],x[(n+1):n_par_f1])
         }))
 
-        ## FIT F1 ##
-        m1 <- cbind(x_,discr,f2_preds,pred)        
-        n_par_f1 <- length(pars_f1)    
-        f1_pars <- t(apply(m1,1,function(x){ 
-            fit_f1<- optim(par=pars_f1, 
-                fn=lifn_F1,x=x[1:n],
+        ## FIT F2 ##
+        m2 <- cbind(x_,discr,f1_preds,pred)        
+        n_par_f2 <- length(pars_f2)    
+        f2_pars <- t(apply(m2,1,function(x){ 
+            fit_f2<- optim(par=pars_f2, 
+                fn=lifn_F2,x=x[1:n],
                 y=x[(n+1):(2*n)],
-                f2_preds=x[(2*n+1):(3*n)],
+                f1_preds=x[(2*n+1):(3*n)],
                 pred=x[(3*n+1):(4*n)],
                 control = list(maxit = 500,reltol=1e-3))
-            return(fit_f1$par)
+            return(fit_f2$par)
         }))        
         
         ## Delta ##
@@ -131,13 +131,13 @@ function(d,
         delta<-t(apply(f1f2_pars,1,function(x){
             f1 <- F1fn(x=x[1:n],pars=x[(n+1):(n+n_par_f1)])
             f2 <- F2fn(x=x[1:n],pars=x[(n+1+n_par_f1):(n+n_par_f1+n_par_f2)])
-            return(2 * (f1 - 0.5) * f2)
+            return(2 * (f2 - 0.5) * f1)
         }))
 
         return_val$delta=delta
         return_val$f1_pars=f1_pars
         return_val$f2_pars=f2_pars
-        return_val$f2_preds=f2_preds
+        return_val$f1_preds=f1_preds
     }
 
     class(return_val) <- "vmapp"
@@ -147,7 +147,7 @@ function(d,
 
 .deltafn <- function(xx,f1,f2,f1pars,f2pars) 
 {
-    2 * (f1(xx,f1pars)-0.5) * f2(xx,f2pars)
+    2 * (f2(xx,f2pars)-0.5) * f1(xx,f1pars)
 }
 
 plot.vmapp<-function(x,...)

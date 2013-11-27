@@ -1,7 +1,7 @@
 Package: rvmapp
 Type: Package
 Title: Validation Metric Applied to Probabilistic Predictions
-Version: 1.0
+Version: 1.1
 Date: 2013-06-05
 Author: Corey Chivers & Brian Leung
 Maintainer: Corey Chivers <corey.chivers@mail.mcgill.ca>
