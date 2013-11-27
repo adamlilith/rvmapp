@@ -10,8 +10,8 @@ Provides an inferential metric of goodness of fit of a binary prediction model u
 \usage{
 vmapp(d, pred, x_vars = NULL, sim_n = 1000, predict_delta = TRUE, 
     give_p = TRUE, lifn_F1 = li_F1, lifn_F2 = li_F2, 
-    pars_f1 = c(0.1, 1, 0.2437, 0.1, 1, 0.2437),
-    pars_f2 = c(1, 1, 1, 1, 0), F1fn = F1, F2fn = F2)
+    pars_f1 = c(1, 1, 1, 1, 0),
+    pars_f2 = c(0.1, 1, 0.2437, 0.1, 1, 0.2437), F1fn = F1, F2fn = F2)
 }
 
 \arguments{
@@ -34,10 +34,10 @@ vmapp(d, pred, x_vars = NULL, sim_n = 1000, predict_delta = TRUE,
     Boolean value indicating whether or not to return p-values for overall and directional biases.
 }
   \item{lifn_F1}{
-    A function which returns the negative log-likelihood of \eqn{ P(S > D \mid S \ne  D) }, where \eqn{S} is the simulated outcome from \eqn{\hat{p}} and \eqn{D} is the observed outcome (data). See \code{\link{li_F1}}, which is the default.
+     A function which returns the negative log-likelihood of \eqn{P(S \ne  D)}. See \code{\link{li_F1}}, which is the default.
 }
   \item{lifn_F2}{
-    A function which returns the negative log-likelihood of \eqn{P(S \ne  D)}. See \code{\link{li_F2}}, which is the default.
+    A function which returns the negative log-likelihood of \eqn{ P(S > D \mid S \ne  D) }, where \eqn{S} is the simulated outcome from \eqn{\hat{p}} and \eqn{D} is the observed outcome (data). See \code{\link{li_F2}}, which is the default.
 }
   \item{pars_f1}{
     A vector of starting parameters for \code{F1} to be passed to \code{optim}. 
@@ -46,10 +46,10 @@ vmapp(d, pred, x_vars = NULL, sim_n = 1000, predict_delta = TRUE,
     A vector of starting parameters for \code{F2} to be passed to \code{optim}. 
 }
   \item{F1fn}{
-    A function which returns \eqn{ P(S > D \mid S \ne  D) }, where \eqn{S} is the simulated outcome from \eqn{\hat{p}} and \eqn{D} is the observed outcome (data). See \code{\link{F1}}, which is the default.
+     A function which returns \eqn{P(S \ne  D)}. See \code{\link{F1}}, which is the default.
 }
   \item{F2fn}{
-    A function which returns \eqn{P(S \ne  D)}. See \code{\link{F2}}, which is the default.
+    A function which returns \eqn{ P(S > D \mid S \ne  D) }, where \eqn{S} is the simulated outcome from \eqn{\hat{p}} and \eqn{D} is the observed outcome (data). See \code{\link{F2}}, which is the default.
 }
 }
 \details{
