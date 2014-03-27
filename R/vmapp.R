@@ -70,7 +70,7 @@ function(d,
             fit <- glm(yy ~ xx,family=binomial(logit))
             return(fit$coefficients)
         })
-        p_slope<-mean(f1_coeffs[2,]>=0)
+        p_slope<-mean(f1_coeffs[2,]>=0,na.rm=TRUE)
         mean_discr<-apply(discr,1,mean,na.rm=TRUE)
         p_overall<-mean(mean_discr>=0.5)        
 
